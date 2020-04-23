@@ -1,0 +1,41 @@
+*{
+	padding: 0;
+	margin: 0;
+}
+
+input{
+	font-size: 14px;
+	font-family: arial;
+	
+}
+
+.index{
+	background-image: url(../images/index.jpg);
+	background-position: center;
+	background-size: cover;
+	/*background-repeat: no-repeat;*/
+}
+
+.container{
+	max-width: 750px;
+	margin: 20px auto 0 auto;
+	padding: 30px;
+	background-color: #FFF;
+}
+.form-row{
+	padding: 10px 0;
+	display: flex;
+}
+
+.form-row label{
+	padding-right: 10px;
+	flex: 1;
+}
+
+/*want to flex set flex: 1*/
+.form-row input{
+	flex: 3; 
+}
+.driver-profile{
+	height: 25px;
+}

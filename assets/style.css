@@ -39,3 +39,6 @@ input{
 .driver-profile{
 	height: 25px;
 }
+.modal-dialog {
+	width: 1000px; /* New width for default modal */
+  }

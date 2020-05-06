@@ -1,7 +1,7 @@
 
 <?php
 	include "dbconnect.inc.php";
-	
+
 	if(isset($_POST['add-submit'])){
 		$year = $_POST['year'];
 		$made = $_POST['made'];

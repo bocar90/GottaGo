@@ -14,6 +14,10 @@
   </head>
   <body>
     <?php
+      /*if(empty($_SESSION["D_Username"]) {
+        header('Location:index.php');
+        exit();
+      }*/
       session_start();
       $usr=$_SESSION["D_Username"];
      

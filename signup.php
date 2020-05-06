@@ -17,7 +17,11 @@
 		<a class="navbar-brand h3 text-white"><i class="fas fa-car ml-lg-5"></i> GottaGo</a>
 	</nav>
 
-		<?php	
+		<?php
+			/*if ($_SERVER['REQUEST_METHOD']!="POST") {
+				header('Location:index.php');
+				exit();
+			}*/
 			if(isset($_GET['error'])){
 				if($_GET['error'] == 'usernametaken'){
 					echo'<p class="alert alert-danger text-center mb-0 h3" role="alert">
@@ -31,14 +35,14 @@
 	<div class="card">
 		<div class="row no-gutters">
 		  <div class="col-md-6 m-lg-4 "> 
-			<img src="/images/signup.jpg" class="card-img h-auto mr-5" alt="...">
+			<img src="images/signup.jpg" class="card-img h-auto mr-5" alt="...">
 			<h1 class="mt-lg-3">Drive with GottaGo</h1>
 			<h1 class="mt-lg-3">Earn money on your schedule</h1>
 			<h1 class="mt-lg-3">Be your own boss</h1>
 			<p class="font-weight-bold h3 mt-lg-5">GottaGo</p>
 		  </div>
 		  <div class="col-md-8 col-lg-4 ml-lg-5 bg-light">
-			<h1 class="col-md-8">Sign up now</h1>
+			<h1 class="text-center">Sign up now</h1>
 			<div class="card-body">
 				<form action="includes/signup.inc.php" method="post">
 					<div class="form-group row">

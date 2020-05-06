@@ -10,15 +10,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
     <link rel="stylesheet" href="/assets/style.css">
     
-    <title>Riders</title>
+    <title>Passengers</title>
   </head>
   <body>
+    <?php
+      /*if ($_SERVER['REQUEST_METHOD']!="POST") {
+        header('Location:index.php');
+        exit();
+      }*/
+      session_start();
+      $usr=$_SESSION["P_Username"];
+     
+    ?>
     <nav class="navbar navbar-dark bg-dark">
        
         <div class="collapse column" id="navbarToggleExternalContent">
             <div class="bg-dark p-4">
               <h5 class="text-white h4">Rider Profile</h5>
-              <p><a class="text-white my-2 my-sm-0" href="driver-profile.html">Profile</a></p>
+              <p><a class="text-white my-2 my-sm-0" href="passenger-profile.php">Profile</a></p>
               <p><a class="text-white my-2 my-sm-0" href="index.php">Delete my profile</a></p>
               <p><a class="text-white my-2 my-sm-0" href="index.php">Help</a></p>
               <p><a class="text-white my-2 my-sm-0" href="index.php">Logout</a></p>
@@ -33,7 +42,7 @@
 
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
-          <h1 class="display-4">Welcome</h1>
+          <h1 class="display-4">Welcome <?php echo $usr; ?></h1>
           <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
         </div>
     </div>

@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
 	<link rel="stylesheet" href="/assets/style.css">
 
-    <title>Add vehicle</title>
+    <title>Add trip</title>
   </head>
   <body>
   	<nav class="navbar navbar-dark bg-dark">
@@ -20,14 +20,27 @@
 				/*if ($_SERVER['REQUEST_METHOD']!="POST") {
 					header('Location:index.php');
 					exit();
-				}*/
+                }*/
+                
                 if(isset($_GET['error'])){
-					if($_GET['error'] == 'platetaken'){
+					if($_GET['error'] == 'tripexist'){
 						echo'<p class="alert alert-danger text-center mb-0 h3" role="alert">
-								This vehicle exists already, please enter another one!
+								This trip exists already, please enter another one!
                         </p>';
                     }
                 }
+                include "includes/dbconnect.inc.php";
+
+                start_session();
+                $userid=$_SESSION["D_id"];
+
+                $query = "select * from trips where Driver_id = ?";
+		
+                $stmt = mysqli_prepare($conn,$query);
+                mysqli_stmt_bind_param($stmt,"i",$userid);
+                mysqli_stmt_execute($stmt);
+                //fetch data from database
+                $data = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
             ?>
 
 
@@ -41,27 +54,35 @@
 			<p class="font-weight-bold h3 mt-lg-5">GottaGo</p>
 		  </div>
 		  <div class="col-md-8 col-lg-4 ml-lg-5 bg-light">
-			<h1 class="col-md-8">Add a vehicle now</h1>
+			<h1 class="col-md-8">Add a trip now</h1>
 			<div class="card-body">
 				<form action="includes/addvehicle.inc.php" method="post">
 					
 					<div class="form-group">
-						<input type="text" class="form-control" name="year" placeholder="Year" required>
+						<input type="text" class="form-control" name="Depart_Street" placeholder="Departure Street" required>
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" name="made" placeholder="Made" required>
+						<input type="text" class="form-control" name="Depart_City" placeholder="Departure City" required>
 					</div>
 					<div class="form-group mt-2">
-						<input type="text" class="form-control" name="model" placeholder="Model" required>
+						<input type="text" class="form-control" name="Depart_State" placeholder="Departure State" required>
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" name="color" placeholder="color" required>
+						<input type="text" class="form-control" name="Arrival_Street" placeholder="Arrival Street" required>
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" name="plate" placeholder="License Plate" required>
+						<input type="text" class="form-control" name="Arrival_City" placeholder="Arrival City" required>
 					</div>
-				
-					<p class="text-center"><button type="submit" class="btn btn-success" name="add-submit">Submit</button></p>	
+                    <div class="form-group">
+						<input type="text" class="form-control" name="Arrival_State" placeholder="Arrival State" required>
+					</div>
+                    <div class="form-group">
+						<input type="text" class="form-control" name="trip_date" placeholder="MM/DD/YYYY"  onfocus="(this.type='date')" required>
+					</div>
+                    <div class="form-group">
+						<input type="time" class="form-control" name="trip_time" placeholder="Trip time" required>
+					</div>
+					<p class="text-center"><button type="submit" class="btn btn-success" name="trip-submit">Submit</button></p>	
 				</form>
 				<p><a class="page-link mt-5" href="driver-profile.php" aria-label="Previous"><span aria-hidden="true">&laquo;</span> Previous page</a></p>
 				<p class="font-weight-bold mt-5"><a><i class="fas fa-car"></i> GottaGo</a></p>

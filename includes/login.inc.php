@@ -16,22 +16,21 @@
 		}
 		else{
 			$query1 = "select D_Username, D_Password from drivers where D_Username = ?";
-			$query2 = "select P_Username, P_Password from passengers where P_Username = ?";
 			$stmt1 = mysqli_prepare($conn,$query1);
-			$stmt2 = mysqli_prepare($conn,$query2);
 			mysqli_stmt_bind_param($stmt1,"s",$username);
-			mysqli_stmt_bind_param($stmt2,"s",$username);
 			mysqli_stmt_execute($stmt1);
-			mysqli_stmt_execute($stmt2);
-			//fetch data from database
 			$data1 = $stmt1->get_result()->fetch_all(MYSQLI_ASSOC);
-			//var_dump($data1);
-			/*$data2 = $stmt2->get_result()->fetch_all(MYSQLI_ASSOC); 
-			($data1[0]['D_Username']==$username || $data2[0]['P_Username']==$username
-			$data1[0]['D_Password']==$pwd || $data2[0]['P_Password']==$pwd*/
 
-			if($data1[0]['D_Username']==$username){
-				if($data1[0]['D_Password']==$pwd){
+			$query2 = "select P_Username, P_Password from passengers where P_Username = ?";
+			$stmt2 = mysqli_prepare($conn,$query2);
+			mysqli_stmt_bind_param($stmt2,"s",$username);
+			mysqli_stmt_execute($stmt2);
+			$data2 = $stmt2->get_result()->fetch_all(MYSQLI_ASSOC); 
+
+			var_dump($data2[0]['P_Password']);
+
+			 if($data1[0]['D_Username']==$username){
+				if(password_verify($pwd,$data1[0]['D_Password'])){
 					//setcookie('username', $username, time()+3600, '/');
 					session_start();
 					$_SESSION["D_Username"]=$username;
@@ -41,7 +40,18 @@
 					header("Location: ../index.php?error=wrongpwd&username=".$username);
 					exit();
 				}
-			} else{
+			}elseif($data2[0]['P_Username']==$username){
+				if(password_verify($pwd,$data2[0]['P_Password'])){
+					session_start();
+					$_SESSION["P_Username"]=$username;
+					header("Location: ../Passenger.php");
+					exit();
+				} else{
+					header("Location: ../index.php?error=wrongpwd&username=".$username);
+					exit();
+				}
+			} 
+			else{
 				header("Location: ../index.php?error=wrongusername");
 				exit();
 			}

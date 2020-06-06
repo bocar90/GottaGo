@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/assets/style.css">
+    <link rel="stylesheet" href="assets/style.css">
     
     <title>Passengers</title>
   </head>
@@ -16,12 +16,12 @@
 
     <?php
       include "includes/dbconnect.inc.php";
-      
-      /*if ($_SERVER['REQUEST_METHOD']!="POST") {
+      session_start();
+      if (!isset($_SESSION["P_Username"])) {
         header('Location:index.php');
         exit();
-      }*/
-      session_start();
+      }
+     
       $username=$_SESSION["P_Username"];
 
       $query1 = "select * from passengers where P_Username = ?";
@@ -32,6 +32,7 @@
       $data = $stmt1->get_result()->fetch_all(MYSQLI_ASSOC);
       $userid=$data[0]['Passenger_id'];
       $_SESSION["Passenger_id"]=$userid;
+      
 
       $query3 = "select * from passenger_trips where Passenger_id = ?";
       $stmt3 = mysqli_prepare($conn,$query3);
@@ -43,16 +44,42 @@
       $stmt4 = mysqli_prepare($conn,$query4);
       mysqli_stmt_execute($stmt4);
       $searchtrips = $stmt4->get_result()->fetch_all(MYSQLI_ASSOC);
+
+      $query5 = "select picture from profile_picture where username = ?";
+      $stmt5 = mysqli_prepare($conn,$query5);
+		  mysqli_stmt_bind_param($stmt5,"s",$username);
+      mysqli_stmt_execute($stmt5);
+      $picture = $stmt5->get_result()->fetch_all(MYSQLI_ASSOC);
     ?>
 
     <nav class="navbar navbar-dark bg-dark">
       <div class="collapse column" id="navbarToggleExternalContent">
         <div class="bg-dark p-4">
-          <h5 class="text-white h4">Driver Profile</h5>
-          <p><a class="text-white my-2 my-sm-0" href="driver.php">Profile</a></p>
-          <p><a class="text-white my-2 my-sm-0" href="index.php">Delete account</a></p>
-          <p><a class="text-white my-2 my-sm-0" href="index.php">Help</a></p>
-          <p><a class="text-white my-2 my-sm-0" href="index.php">Logout</a></p>
+          <h5 class="text-white h4">Rider Profile</h5>
+          <p><a class="text-white my-2 my-sm-0" href="passenger.php">Profile</a></p>
+          <!-- Trigger the modal with a button -->
+          <p><a class="text-white my-2 my-sm-0 deleteModal" data-toggle="modal" data-target="#deleteModal">Delete account</a></p>
+                
+                          <!-- Modal -->
+                          <div id="deleteModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                              <!-- Modal content-->
+                              <div class="modal-content">
+                                <div class="modal-body">
+                                  <form action="includes/riderdeleteaccount.inc.php" method="post">
+                                    <p class="text-center h4">Do you want to delete your account?</p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="col btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                  <button type="submit" name="delete-account" class="col btn btn-primary">Delete</button>
+                                </div>
+                                  </form> <!-- End of form-->
+                              </div>
+                            </div>
+                          </div>
+
+          <p><a class="text-white my-2 my-sm-0" href="help.php">Help</a></p>
+          <p><a class="text-white my-2 my-sm-0" href="includes/logout.inc.php">Logout</a></p>
         </div>
       </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +108,45 @@
     <div>
       <p class="bg-light text-muted"><i class="fas fa-caret-left"></i></p>
       <div class="row">
-        <img class="img-circle rounded-circle border border-dark ml-5 mb-3" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" />
+        <div class="img-circle column mr-5 mb-3">
+          <?php
+            if(isset($picture[0]['picture'])){
+              echo '<img class="img-circle rounded-circle border border-dark ml-5" src="'.$picture[0]['picture'].'"data-toggle="modal" data-target="#profilepictureModal" />';
+            } else {
+              echo '<img class="img-circle rounded-circle border border-dark ml-5" data-toggle="modal" data-target="#profilepictureModal" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" />';
+            }
+          ?>
+          <!-- Trigger the modal with a button 
+          <p class="h3 mt-0"><a data-toggle="modal" data-target="#profilepictureModal"><i class="fas fa-camera"></i></a></p> -->
+                              
+          <!-- Modal -->
+          <div id="profilepictureModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title text-center">Upload Profile Picture</h4>
+                </div>
+                <div class="modal-body">
+                  <form action="riderupload.php" method="post" enctype="multipart/form-data">
+                    <p>
+                      <!-- limit size of uploaded file <= 500000 Bytes or 500 KB -->
+                      <input type="hidden" name="MAX_FILE_SIZE" value="500000" />
+                    </p>
+                    <p>
+                      <input type="file" name="document" id="document" value="" class="btn btn-outline-info btn-lg rounded-0 font-weight-bold">
+                    </p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="col btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" name="sendPicture" class="col btn btn-primary">Upload</button>
+                </div>
+                  </form> <!-- End of form-->
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <div class="column ml-5">
           <p class="h3"><?php echo $data[0]['P_FirstN'];?> </p>
           <p class="font-weight-bold h3"><?php echo $data[0]['P_LastN'];?></p>
@@ -93,7 +158,7 @@
     <div class="tab-content" id="pills-tabContent">
       <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
         <div class="jumbotron jumbotron-fluid">
-          <div class="container col-lg-8">
+          <div class="container col-lg-6">
             <form action="includes/updateusers.inc.php" method="post">
               <div class="form-group">
                 <label>First name</label>
@@ -119,7 +184,7 @@
             </form>
           </div>
         </div>
-      </div>  <!--end of pills-profile-tab -->
+      </div>  <!--end of pills-profile-tab --> 
 
         <div class="tab-pane fade" id="pills-trips" role="tabpanel" aria-labelledby="pills-trips-tab">
           <div class="jumbotron jumbotron-fluid">
@@ -169,13 +234,17 @@
                   </thead>
                   <tbody>
                     <?php
-                      foreach($displaytrips as  $tripid => $info){
+                      foreach($displaytrips as  $trips => $info){
                         echo "<tr>";
                         foreach($info as $key => $value){
+                          if($key==='id'){
+                            //$info['id'] =1;
+                            $tripid = $value;
+                          }
                           echo '<td class="text-center align-middle">'.$value."</td>";
                         }
-                        echo '<td class="text-center align-middle"><a href="#" class="text-dark"><i class="fa fa-trash"></i></a></td>';
-                        echo '<td class="text-center align-middle"><a href="#" class="text-dark"><i class="fa fa-pencil-alt"></i></a></td>';
+                        echo '<td class="text-center align-middle"><a href="includes/ridertrip-delete.inc.php?tripid='.$tripid.'" class="text-dark"><i class="fa fa-trash"></i></a></td>';
+                        echo '<td class="text-center align-middle"><a href="ridertrip-edit.php?tripid='.$tripid.'" class="text-dark"><i class="fa fa-pencil-alt"></i></a></td>';
                         echo "</tr>";
                       }
                     ?>    
@@ -185,11 +254,10 @@
             </div>
           </div>
         </div> <!-- end of pills-trips-tab -->
-
         <!-- beginning of pills-add-tab -->
         <div class="tab-pane fade" id="pills-add" role="tabpanel" aria-labelledby="pills-add-tab">
           <div class="jumbotron jumbotron-fluid">
-            <div class="container col-lg-8">
+            <div class="container col-lg-6">
               <h1 class="text-center mb-5">Add a trip now</h1>
               <form action="includes/addtrip.inc.php" method="post">
                 <div class="form-group">
@@ -222,12 +290,11 @@
           </div>
         </div>
         <!-- end of pills-add-tab -->
-
         <!-- beginning pills-search-tab -->
         <div class="tab-pane fade" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab">
           <div class="jumbotron jumbotron-fluid">
             <div class="container">
-              <h4 class="text-center mb-5">AVAILABLE TRIPS TO REQUEST</h4>
+              <h4 class="text-center mb-5">AVAILABLE TRIPS TO JOIN</h4>
               <div class="table-responsive">
                 <table class="table">
                   <thead>
@@ -263,18 +330,21 @@
                         <div class=" text-uppercase text-dark text-center align-middle">Trip_time</div>
                       </th>
                       <th scope="col" class="border-0">
-                        <div class=" text-uppercase text-dark text-center align-middle">Request</div>
+                        <div class=" text-uppercase text-dark text-center align-middle">Join</div>
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
-                      foreach($searchtrips as  $tripid => $info){
+                      foreach($searchtrips as  $search => $info){
                         echo "<tr>";
                         foreach($info as $key => $value){
+                          if($key==='id'){
+                            $tripid = $value;
+                          }
                           echo '<td class="text-center align-middle">'.$value."</td>";
                         }
-                        echo '<td class="text-center align-middle"><a href="#" class="text-dark"><i class="fa fa-plus-circle"></i></a></td>';
+                        echo '<td class="text-center align-middle"><a href="includes/ridersearch.inc.php?tripid='.$tripid.'" class="text-dark"><i class="fa fa-plus-circle"></i></a></td>';
                         echo "</tr>";
                       }
                     ?>    

@@ -8,8 +8,11 @@
 			$_SESSION["D_Username"]=$_POST["username"];
 			header("Location: ../about.php")*/
 
-		$username = $_POST['username'];
-		$pwd = $_POST['password'];
+		//$username = $_POST['username'];
+		$username = htmlspecialchars(trim($_POST['username'])); 
+		//$pwd = $_POST['password'];
+		$pwd = htmlspecialchars(trim($_POST['password'])); 
+		
 		if(empty($username) || empty($pwd)){
 			header("Location: ../index.php?error=emptyfields&username=".$username);
 			exit();
@@ -27,7 +30,7 @@
 			mysqli_stmt_execute($stmt2);
 			$data2 = $stmt2->get_result()->fetch_all(MYSQLI_ASSOC); 
 
-			var_dump($data2[0]['P_Password']);
+			//var_dump($data2[0]['P_Password']);
 
 			 if($data1[0]['D_Username']==$username){
 				if(password_verify($pwd,$data1[0]['D_Password'])){

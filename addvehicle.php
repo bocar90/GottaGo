@@ -41,7 +41,7 @@
 			<p class="font-weight-bold h3 mt-lg-5">GottaGo</p>
 		  </div>
 		  <div class="col-md-8 col-lg-4 ml-lg-5 bg-light">
-			<h1 class="col-md-8">Add a vehicle now</h1>
+			<h1 class="text-center">Add a vehicle now</h1>
 			<div class="card-body">
 				<form action="includes/addvehicle.inc.php" method="post">
 					
@@ -70,7 +70,7 @@
 		</div>
 	</div>
 
-	<div class="sticky">
+	<div class="footer sticky">
       	<p class="bg-dark py-4 text-white text-center m-0">Copyright 2020</p>
     </div>
     <!-- Optional JavaScript -->

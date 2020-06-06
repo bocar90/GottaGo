@@ -6,12 +6,12 @@
 		exit();
 	}
 	if(isset($_POST['driverupdate-submit'])){
-		    $fname = $_POST['Fname'];
-			$lname = $_POST['Lname'];
-			$lic_number = $_POST['Lnumber'];
-			$street = $_POST['street'];
-			$city = $_POST['city'];
-			$state = $_POST['state'];
+		$fname = htmlspecialchars(trim($_POST['Fname'])); 
+		$lname = htmlspecialchars(trim($_POST['Lname'])); 
+		$lic_number = htmlspecialchars(trim($_POST['Lnumber']));
+		$street = htmlspecialchars(trim($_POST['street']));
+		$city = htmlspecialchars(trim($_POST['city']));
+		$state = htmlspecialchars(trim($_POST['state']));
 			
         session_start();
         $userid = $_SESSION["Driver_id"];
@@ -22,21 +22,22 @@
 		mysqli_stmt_bind_param($stmt,"i",$userid);
 		mysqli_stmt_execute($stmt);
 			
-			// close statement
-			mysqli_stmt_close($statement);
+		// close statement
+		mysqli_stmt_close($stmt);
 
-			//close connection
-            mysqli_close($conn);
+		//close connection
+        mysqli_close($conn);
             
-            header("Location: ../driver-profile.php");
-		    exit();
+        header("Location: ../driver-profile.php");
+		exit();
 
 	}elseif (isset($_POST['riderupdate-submit'])) {
-		$fname = $_POST['Fname'];
-		$lname = $_POST['Lname'];
-		$street = $_POST['street'];
-		$city = $_POST['city'];
-		$state = $_POST['state'];
+
+		$fname = htmlspecialchars(trim($_POST['Fname'])); 
+		$lname = htmlspecialchars(trim($_POST['Lname'])); 
+		$street = htmlspecialchars(trim($_POST['street']));
+		$city = htmlspecialchars(trim($_POST['city']));
+		$state = htmlspecialchars(trim($_POST['state']));
 
 		session_start();
         $userid = $_SESSION["Passenger_id"];
@@ -47,14 +48,14 @@
 		mysqli_stmt_bind_param($stmt,"i",$userid);
 		mysqli_stmt_execute($stmt);
 			
-			// close statement
-			mysqli_stmt_close($statement);
+		// close statement
+		mysqli_stmt_close($stmt);
 
-			//close connection
-            mysqli_close($conn);
+		//close connection
+        mysqli_close($conn);
             
-            header("Location: ../passenger-profile.php");
-		    exit();
+        header("Location: ../passenger-profile.php");
+		exit();
 	} 
 	else{
 		header("Location: ../index.php");

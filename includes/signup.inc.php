@@ -22,16 +22,16 @@
 	
 	if(isset($_POST['signup-submit'])){
 		
-			$fname = $_POST['Fname'];
-			$lname = $_POST['Lname'];
-			$username =$_POST['username'];
-			$pwd = $_POST['password'];
-			$user = $_POST['user'];
-			$lic_number = $_POST['Lnumber'];
-			$street = $_POST['street'];
-			$city = $_POST['city'];
-			$state = $_POST['state'];
-			$rating = 5.0;
+		$fname = htmlspecialchars(trim($_POST['Fname'])); 
+		$lname = htmlspecialchars(trim($_POST['Lname']));
+		$username = htmlspecialchars(trim($_POST['username']));
+		$pwd = htmlspecialchars(trim($_POST['password']));
+		$user = htmlspecialchars(trim($_POST['user']));
+		$lic_number = htmlspecialchars(trim($_POST['Lnumber']));
+		$street = htmlspecialchars(trim($_POST['street']));
+		$city = htmlspecialchars(trim($_POST['city']));
+		$state = htmlspecialchars(trim($_POST['state']));
+		$rating = 5.0;
 
 		if($user === "driver")
 		{

@@ -3,11 +3,11 @@
 	include "dbconnect.inc.php";
 
 	if(isset($_POST['add-submit'])){
-		$year = $_POST['year'];
-		$made = $_POST['made'];
-		$model =$_POST['model'];
-		$color = $_POST['color'];
-		$plate = $_POST['plate'];	
+		$year = htmlspecialchars(trim($_POST['year']));
+		$made = htmlspecialchars(trim($_POST['made']));
+		$model = htmlspecialchars(trim($_POST['model']));
+		$color = htmlspecialchars(trim($_POST['color']));
+		$plate = htmlspecialchars(trim($_POST['plate']));	
         session_start();
         $userid = $_SESSION["Driver_id"];
 

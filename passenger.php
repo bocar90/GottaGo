@@ -14,25 +14,43 @@
   </head>
   <body>
     <?php
-      /*if ($_SERVER['REQUEST_METHOD']!="POST") {
-        header('Location:index.php');
-        exit();
-      }*/
+      
       session_start();
       $usr=$_SESSION["P_Username"];
-     
+      if (!isset($_SESSION["P_Username"])) {
+        header('Location:../index.php');
+        exit();
+      }
     ?>
     <nav class="navbar navbar-dark bg-dark">
-       
-        <div class="collapse column" id="navbarToggleExternalContent">
+          <div class="collapse column" id="navbarToggleExternalContent">
             <div class="bg-dark p-4">
               <h5 class="text-white h4">Rider Profile</h5>
               <p><a class="text-white my-2 my-sm-0" href="passenger-profile.php">Profile</a></p>
-              <p><a class="text-white my-2 my-sm-0" href="index.php">Delete my profile</a></p>
-              <p><a class="text-white my-2 my-sm-0" href="index.php">Help</a></p>
-              <p><a class="text-white my-2 my-sm-0" href="index.php">Logout</a></p>
+              <!-- Trigger the modal with a button -->
+              <p><a class="text-white my-2 my-sm-0 deleteModal" data-toggle="modal" data-target="#deleteModal">Delete account</a></p>
+                
+              <!-- Modal -->
+              <div id="deleteModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <form action="includes/riderdeleteaccount.inc.php" method="post">
+                        <p class="text-center h4">Do you want to delete your account?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="col btn btn-secondary" data-dismiss="modal">Cancel</button>
+                      <button type="submit" name="delete-account" class="col btn btn-primary">Delete</button>
+                    </div>
+                      </form> <!-- End of form-->
+                  </div>
+                </div>
+              </div>
+              <p><a class="text-white my-2 my-sm-0" href="help.php">Help</a></p>
+              <p><a class="text-white my-2 my-sm-0" href="includes/logout.inc.php">Logout</a></p>
             </div>
-        </div>
+          </div>
         
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon my-2 my-sm-0"></span>
@@ -43,7 +61,6 @@
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
           <h1 class="display-4">Welcome <?php echo $usr; ?></h1>
-          <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
         </div>
     </div>
 

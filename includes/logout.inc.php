@@ -4,8 +4,8 @@
 		$_SESSION=[];
 		Destroy session
 		$_SESSION_DESTROY*/
-
-	if(!isset($_SESSION['username'])){
+	session_start();
+	if(!isset($_SESSION["D_Username"]) && !isset($_SESSION['P_Username'])){ //OR: 1 || 0 = 1
 		header('Location: ../index.php');
 		exit();
 	}else{
